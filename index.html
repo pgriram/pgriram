@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PGRIRAM Viewer</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        crossorigin=""/>
+
+    <link rel="stylesheet" href="css/leaflet-sidebar.css" />
+	
+    <link rel="stylesheet" href="css/leaflet.wmslegend.css"/>
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body, #map {
+            height: 100%;
+            font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+        }
+
+        .lorem {
+            font-style: italic;
+            text-align: justify;
+            color: #AAA;
+        }
+    </style>
+</head>
+<body>
+    <!-- optionally define the sidebar content via HTML markup -->
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+
+        <!-- nav tabs -->
+        <div class="leaflet-sidebar-tabs">
+            <!-- top aligned tabs -->
+            <ul role="tablist">
+                <li><a href="#home" role="tab"><i class="fa fa-bars active"></i></a></li>
+                <li><a href="#suscetibilidade" role="tab"><i class="fa fa-globe" aria-hidden="true"></i></i></a></li>
+				<li><a href="#risco" role="tab"><i class="fa fa-download" aria-hidden="true"></i></i></a></li>
+            </ul>
+
+            <!-- bottom aligned tabs -->
+            <ul role="tablist">
+                <li><a href="https://github.com/pgriram/aplicacao"><i class="fa fa-github"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- panel content -->
+        <div class="leaflet-sidebar-content">
+            <div class="leaflet-sidebar-pane" id="home">
+                <h1 class="leaflet-sidebar-header">
+                    PGRI RAM
+                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+				<br>
+				<img src="img/draac.png" width="100%">
+                <p>A cartografia de áreas inundáveis e de riscos, elaborada no âmbito da Diretiva para a Avaliação e Gestão do Risco de Inundações, tem como objetivo potenciar a diminuição das consequências adversas das inundações na população, no ambiente, nas atividades económicas e património; melhorar a perceção do risco pela população e o ordenamento do território.</p>
+				<img src="img/poseur.png" width="100%">				
+				
+			</div>
+
+            <div class="leaflet-sidebar-pane" id="suscetibilidade">
+                <h1 class="leaflet-sidebar-header">
+                    Legenda
+                    <span class="leaflet-sidebar-close"><i class="fa-solid fa-house-water"></i></span>
+                </h1>
+                <p>
+                    <h2>Legenda dos temas das Cartas de zonas inundáveis e Cartas de risco.</h2> <br>
+					<h3>Extensão inundável</h3>
+					<img src="http://pgriram.socarto.pt:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=pgriram:E100" width="18px" height="20px">
+					<h3>Velocidade</h3>
+					<img src="http://pgriram.socarto.pt:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=pgriram:V100" width="87px" height="100px">
+					<h3>Profundidade</h3>
+					<img src="http://pgriram.socarto.pt:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=pgriram:D100" width="87px" height="100px">
+					<h3>Perigosidade</h3>
+					<img src="http://pgriram.socarto.pt:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=pgriram:P100" width="87px" height="100px">
+					<h3>Risco</h3>
+					<img src="http://pgriram.socarto.pt:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=pgriram:R100" width="87px" height="100px">
+					<h3>Consequência</h3><br>
+					<img src="http://pgriram.socarto.pt:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=pgriram:CONSEQUENCIA" width="87px" height="100px">
+            </div>
+            <div class="leaflet-sidebar-pane" id="risco">
+                <h1 class="leaflet-sidebar-header">
+                    Download das cartas
+                    <span class="leaflet-sidebar-close"><i class="fa-solid fa-house-water"></i></span>
+                </h1>
+                <p>
+                    <h2>Download das cartas em PDF</h2>
+					<h3>Extensão inundável</h3>
+					<p>Extensão (fluviais) - T20 <a href="data/pdf/EXTENSAO20.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Extensão (fluviais) - T100 <a href="data/pdf/EXTENSAO100.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Extensão (fluviais) - T1000 <a href="data/pdf/EXTENSAO1000.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Extensão (fluviais) - Sólido <a href="data/pdf/EXTENSAOSOLID.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Extensão (costeiras) - Atual e Futura <a href="data/pdf/EXTENSAOCOSTEIRAS.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<h3>Profundidade</h3>
+					<p>Profundidade (fluviais) - T20 <a href="data/pdf/PROFUNDIDADE20.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Profundidade (fluviais) - T20 <a href="data/pdf/PROFUNDIDADE100.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Profundidade (fluviais) - T20 <a href="data/pdf/PROFUNDIDADE1000.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<h3>Velocidade</h3>
+					<p>Velocidade (fluviais) - T20 <a href="data/pdf/VELOCIDADE20.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Velocidade (fluviais) - T20 <a href="data/pdf/VELOCIDADE100.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Velocidade (fluviais) - T20 <a href="data/pdf/VELOCIDADE1000.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<h3>Perigosidade</h3>
+					<p>Perigosidade (fluviais) - T20 <a href="data/pdf/PERIGOSIDADE20.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Perigosidade (fluviais) - T20 <a href="data/pdf/PERIGOSIDADE100.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Perigosidade (fluviais) - T20 <a href="data/pdf/PERIGOSIDADE1000.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<h3>Consequência</h3>
+					<p>Consequência <a href="data/pdf/CONSEQUENCIA.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<h3>Risco</h3>
+					<p>Risco (fluviais) - T20 <a href="data/pdf/RISCO20.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Risco (fluviais) - T20 <a href="data/pdf/RISCO100.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Risco (fluviais) - T20 <a href="data/pdf/RISCO1000.zip" download><img src="img/download.svg" width="20" height="20"></a></p>
+					<p>Risco (costeiras) - Atual <a href="data/pdf/RISCOCOSTEIRAS.zip" download><img src="img/download.svg" width="20" height="20"></a></p>				
+                </p>
+            </div>
+
+            <div class="leaflet-sidebar-pane" id="messages">
+                <h1 class="leaflet-sidebar-header">Messages<span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+        </div>
+    </div>
+
+    <div id="map"></div>
+  
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        crossorigin=""></script>
+		
+	<link rel="stylesheet" href="css/L.Control.Layers.Tree.css" crossorigin=""/>
+    <script src="js/L.Control.Layers.Tree.js"></script>
+	<script src='https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js'></script>
+				
+    <script src="js/leaflet-sidebar.js"></script>
+	<script src="data/aprsi.geojson"></script>
+	<script src="data/ribeiras.geojson"></script>
+
+
+    <script>
+        // standard leaflet map setup
+        var map = L.map('map');
+        map.setView([32.828360942083165, -16.812855713162822], 10);
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; OpenStreetMap contributors'
+        }).addTo(map);
+        //L.marker([38.542117932644935, -8.88517171392668]).addTo(map);
+		//LAYERS	
+		var aprsiLayer = new L.geoJSON(aprsiData,{
+			//style: cheiasrapidasatualStyle,
+			//onEachFeature: gardenOnEachFeature
+		});                  
+		//aprsiLayer.addTo(map);
+		var ribeirasLayer = new L.geoJSON(ribeirasData,{
+			//style: cheiasrapidasatualStyle,
+			//onEachFeature: gardenOnEachFeature
+		});                  
+		//ribeirasLayer.addTo(map);					
+
+		var wmsExtensao20 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:E20",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Extensão T20"
+		  });
+		var wmsExtensao100 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:E100",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Extensão T100"
+		  });
+		var wmsExtensao1000 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:E1000",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Extensão T1000"
+		  })
+		  .addTo(map);
+		var wmsExtensaoSolido = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:ETS",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Extensão Sólido"
+		  })
+		  .addTo(map);		  
+		var wmsExtensaoCosteiras = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:E_C",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Extensão Costeiras"
+		  })
+		  .addTo(map);		  
+		var wmsVelocidade20 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:V20",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Velocidade T20"
+		  });
+		var wmsVelocidade100 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:V100",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Velocidade T100"
+		  });
+		var wmsVelocidade1000 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:V1000",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Velocidade T1000"
+		  });		  
+		var wmsProfundidade20 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:D20",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Profundidade T20"
+		  });
+		var wmsProfundidade100 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:D100",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Profundidade T100"
+		  });
+		var wmsProfundidade1000 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:D1000",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Profundidade T1000"
+		  });
+		var wmsPerigosidade20 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:P20",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Perigosidade T20"
+		  });
+		var wmsPerigosidade100 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:P100",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Perigosidade T100"
+		  });
+		var wmsPerigosidade1000 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:P1000",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Perigosidade T1000"
+		  });
+		var wmsRisco20 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:R20",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Risco T20"
+		  });
+		var wmsRisco100 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:R100",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Risco T100"
+		  });
+		var wmsRisco1000 = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:R1000",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Risco T1000"
+		  });
+		var wmsRiscoCosteiras = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:R_C",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Risco Costeiras"
+		  });		  
+		var wmsConsequencias = L.tileLayer
+		  .wms("http://pgriram.socarto.pt:8080/geoserver/pgriram/wms?", {
+			layers: "pgriram:CONSEQUENCIA",
+			format: "image/png",
+			transparent: "true",
+			version: "1.1.0", //wms version (ver get capabilities)
+			//attribution: "Consequências"
+		  });
+		  
+		// CRIA A TREEVIEW
+        var baseTree = [
+            {
+                label: 'OpenStreetMap',
+                layer: osm,
+                children: [
+                    {label: 'B&W', layer: osm, name: 'OpenStreetMap <b>B&W</b>'},
+                    
+                ]
+            },
+        ];
+
+        var granada = L.marker([37.133, -3.636]);
+        var malaga = L.marker([36.674, -4.499]);
+        var sevilla = L.marker([37.418, -5.893]);
+
+        var overlaysTree = {
+            label: 'Cartas de zonas inundáveis e Cartas de risco',
+            selectAllCheckbox: 'Un/select all',
+            children: [
+                {label: '<div id="onlysel">-Show only selected-</div>'},
+                {label: 'Inundações Fluviais',
+                    selectAllCheckbox: 'De/seleccionar todo',
+                    children: [
+                        {label: 'Período de Retorno 20 Anos', selectAllCheckbox: true, children: [
+							{label: 'Extensão', layer: wmsExtensao20},
+                            {label: 'Velocidade', layer: wmsVelocidade20},
+                            {label: 'Profundidade', layer: wmsProfundidade20},
+                            {label: 'Perigosidade', layer: wmsPerigosidade20},
+							{label: 'Consequência', layer: wmsConsequencias},
+							{label: 'Risco', layer: wmsRisco20},
+                        ]},
+                        {label: 'Período de Retorno 100 Anos', selectAllCheckbox: true, children: [
+                            {label: 'Extensão', layer: wmsExtensao100},
+							{label: 'Extensão transp. sólido', layer: wmsExtensaoSolido},
+							{label: 'Velocidade', layer: wmsVelocidade100},
+                            {label: 'Profundidade', layer: wmsProfundidade100},
+							{label: 'Perigosidade', layer: wmsPerigosidade100},
+							{label: 'Consequência', layer: wmsConsequencias},
+							{label: 'Risco', layer: wmsRisco100},
+                        ]},
+                        {label: 'Período de Retorno 1000 Anos', selectAllCheckbox: true, children: [
+                            {label: 'Extensão', layer: wmsExtensao1000},
+							{label: 'Velocidade', layer: wmsVelocidade1000},
+                            {label: 'Profundidade', layer: wmsProfundidade1000},
+                            {label: 'Perigosidade', layer: wmsPerigosidade1000},
+							{label: 'Consequência', layer: wmsConsequencias},
+							{label: 'Risco', layer: wmsRisco1000},
+                        ]},
+                    ],
+                },
+				               
+                {label: 'Inundações costeiras',
+                    selectAllCheckbox: 'De/seleccionar todo',
+                    children: [
+                        {label: 'Cenário atual', selectAllCheckbox: true, children: [
+                            {label: 'Extensão - cenário atual', layer: wmsExtensaoCosteiras},
+                            {label: 'Consequência', layer: wmsConsequencias},
+                            {label: 'Risco', layer: wmsRiscoCosteiras},
+                        ]},
+                        {label: 'Cenário 100 anos', children: [
+                            {label: 'Extensão - 100 anos', layer: wmsExtensaoCosteiras},
+                            {label: 'Consequência', layer: wmsConsequencias},
+                            {label: 'Risco', layer: wmsRiscoCosteiras},
+                        ]},
+                    ],
+                },
+            ]
+        }
+
+        var lay = L.control.layers.tree(baseTree, overlaysTree,
+            {
+                namedToggle: true,
+                selectorBack: false,
+                closedSymbol: '&#8862; &#x1f5c0;',
+                openedSymbol: '&#8863; &#x1f5c1;',
+                collapseAll: 'Collapse all',
+                expandAll: 'Expand all',
+                collapsed: false,
+            });
+
+        lay.addTo(map).collapseTree().expandSelected().collapseTree(true);
+        L.DomEvent.on(L.DomUtil.get('onlysel'), 'click', function() {
+            lay.collapseTree(true).expandSelected(true);
+        });		
+
+
+        // create the sidebar instance and add it to the map
+        var sidebar = L.control.sidebar({ container: 'sidebar' })
+            .addTo(map)
+            .open('home');
+
+        // be notified when a panel is opened
+        sidebar.on('content', function (ev) {
+            switch (ev.id) {
+                case 'autopan':
+                sidebar.options.autopan = true;
+                break;
+                default:
+                sidebar.options.autopan = false;
+            }
+        });
+							
+		function getCorConsequencia(d) {
+		return d == "5" ? '#d7191c' :
+           d == "4"  ? '#fdae61' :
+           d == "3"  ? '#ffffc0' :
+		   d == "2"  ? '#a6d96a' :
+           d == "1"  ? '#1a9641' :
+                      '#FFEDA0';
+		}
+		function consequenciasStyle(feature) {
+		return {
+			fillColor: getCorConsequencia(feature.properties.Conseq),
+			weight: 0,
+			opacity: 1,
+			color: 'grey',
+			dashArray: '3',
+			fillOpacity: 0.7
+			};
+		}
+		function getCorPerigosidade(d) {
+		return d == "5" ? '#00bf00' :
+           d == "4"  ? '#00bf00' :
+           d == "3"  ? '#ffff00' :
+		   d == "2"  ? '#a6d96a' :
+           d == "1"  ? '#1a9641' :
+                      '#FFEDA0';
+		}
+		function perigosidadeStyle(feature) {
+		return {
+			fillColor: getCorPerigosidade(feature.properties.gridcode),
+			weight: 0,
+			opacity: 1,
+			color: 'grey',
+			dashArray: '3',
+			fillOpacity: 0.7
+			};
+		}
+
+		function getCorRisco(d) {
+			return d > 1.0 ? '#800026' :
+				   d > 0.6  ? '#BD0026' :
+				   d > 0.5  ? '#E31A1C' :
+				   d > 0.4  ? '#FC4E2A' :
+				   d > 0.3   ? '#FD8D3C' :
+				   d > 0.2   ? '#FEB24C' :
+				   d > 0.1   ? '#FED976' :
+							  '#FFEDA0';
+		}						
+		
+    </script>
+</body>
+</html>
